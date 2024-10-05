@@ -1,0 +1,136 @@
+@use "../abstract/media-queries" as mq;
+@use "../abstract/vars" as vars;
+//INDEX
+//section preview
+
+.preview{
+    display: flex;
+    flex-direction:row;
+    align-items: center;
+    justify-content: center;
+    padding-top: 10rem;
+   
+    @include mq.respond-to(mq.$phone){
+        
+        flex-direction: column;
+    }
+    
+}
+.ctn-preview{
+background-color: vars.$clr-secondary;
+background-size:contain;
+background-repeat: no-repeat;
+background-position: center;
+height: 100vh;
+width: 100%;
+overflow: hidden;
+
+}
+//section presentation
+
+.ctn-presentation{
+    background-color: vars.$clr-main;
+    background-color: vars.$clr-main;
+    height: 100vh;
+    width: 100%;
+}
+.presentation{
+    display: flex;
+    padding-top: 6rem;
+    align-items: center;
+    justify-content: center;
+
+    @include mq.respond-to(mq.$phone){
+        flex-direction: column;
+    }
+}
+.img-presentation{
+    width: 30rem;
+    height: 30rem;
+}
+
+//section game
+.ctn-game{
+    background-color: vars.$clr-secondary;
+    background-image: url("../img/estrellas.png");
+    background-size:cover;
+    background-position: center;
+    height: 100vh;
+    width: 100%;
+
+}
+.game{
+    align-items: center;
+    justify-content: center;
+    padding-top: 5rem;
+}
+
+
+
+//HISTORIA
+//section character
+.ctn-character{
+    background-color: vars.$clr-secondary;
+    height: 80vh;
+    width: 100%;
+
+}
+.character{
+    display: flex;
+    padding-top: 6rem;
+    align-items: center;
+    justify-content: center;
+}
+
+//enemies
+.ctn-enemies{
+    background-color: vars.$clr-secondary;
+    height: 80vh;
+    width: 100%;
+}
+.enemies{
+    display: flex;
+    padding-top: 6rem;
+    align-items: center;
+    justify-content: center;
+}
+
+//objects
+.ctn-objects{
+    background-color: vars.$clr-secondary;
+    height: 80vh;
+    width: 100%;
+}
+.objects{
+    display: flex;
+    padding-top: 6rem;
+    align-items: center;
+    justify-content: center;
+}
+.img-objects{
+    width: 15rem;
+    height: 13rem;
+    padding-left: 8rem;
+    padding-right: 8rem;
+
+}
+
+//scenery
+
+.ctn-scenery{
+    background-color: vars.$clr-secondary;
+    height: 100vh;
+    width: 100%;
+}
+
+.scenery{
+    align-items: center;
+    justify-content: center;
+   
+}
+.img-scenery{
+    padding-left: 17em;
+    width: 58rem;
+    height: 29rem;
+    padding-bottom: 4rem;
+}

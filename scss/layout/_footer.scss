@@ -1,0 +1,26 @@
+@use "../abstract/vars" as vars;
+
+.footer{
+    background-color:vars.$clr-main; 
+    background-image: url("../img/estrellas.png");
+    background-size:cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 50vh;
+    color: vars.$clr-white;
+
+}
+.footer-icons{
+    display: flex;
+    gap: 1rem;
+}
+.footer-list{
+    list-style: none;
+    line-height: 2rem;
+}
+.copyright{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 10rem;
+}

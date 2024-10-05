@@ -1,0 +1,38 @@
+
+.enemy-purple{
+    top: 5rem;
+    left: 10rem;
+    transform: rotate(-20deg) ;
+    height: 10rem;
+    width: 10rem;
+}
+// @include mq.respond-to(mq.$phone){
+//    left:0;
+//}
+
+.enemy-orange{
+    bottom: 5rem;
+    right: 9rem;
+    transform: rotate(20deg) ;
+    height: 15rem;
+    width: 15rem;
+}
+.sweet-palette{
+    top: -5rem;
+    height: 35rem;
+    width: 25rem;
+
+}
+.sweet-round{
+    right: -1rem;
+    bottom: -10rem;
+    height: 25rem;
+    width: 20rem;
+}
+
+.sweet-large{
+    top: 1rem;
+    height: 10rem;
+    width: 12rem;
+
+}

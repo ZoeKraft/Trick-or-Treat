@@ -1,0 +1,55 @@
+@use "../abstract/media-queries" as mq;
+
+.top-nav{
+    display: flex;
+    justify-content: space-between;
+    padding: .5rem 2rem ;
+    
+    background: rgb(0, 0, 0, 0.2);
+}
+.nav-list{
+    display: flex;
+    align-items: center;
+    list-style: none;
+    gap: 5rem;
+}
+.logo{
+    width: 4rem;
+
+}
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.bar {
+    height: 3px;
+    width: 25px;
+    background-color: white;
+    margin: 3px 0;
+}
+/* Media Queries para dispositivos móviles */
+
+@include mq.respond-to(mq.$phone){
+  .nav-list {
+        display: none; /* Esconde el menú por defecto */
+        flex-direction: column;
+        width: 100%;
+        background-color: #333;
+        position: absolute;
+        top: 60px; /* Para que no se superponga al header */
+        left: 0;
+    }
+
+    .nav-list.active {
+        display: flex; /* Muestra el menú cuando está activo */
+    }
+
+    .menu-toggle {
+        display: flex; /* Muestra el botón hamburguesa */
+       
+    } 
+    
+}
+
