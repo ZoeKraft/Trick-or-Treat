@@ -57,9 +57,7 @@
 .absolute{
     position: absolute;
 }
-.hidden{
-    overflow: hidden;
-}
+
 .mobile-text-center{
     @include mq.respond-to(mq.$phone){
         text-align: center;

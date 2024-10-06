@@ -1,4 +1,5 @@
 @use "../abstract/vars" as vars;
+@use "../abstract/media-queries" as mq;
 
 .footer{
     background-color:vars.$clr-main; 
@@ -9,10 +10,16 @@
     height: 50vh;
     color: vars.$clr-white;
 
+    @include mq.respond-to(mq.$phone){
+        height: 100vh;
+    }
+
 }
+
 .footer-icons{
     display: flex;
     gap: 1rem;
+    justify-content: center;
 }
 .footer-list{
     list-style: none;

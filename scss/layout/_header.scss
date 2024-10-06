@@ -1,41 +1,80 @@
 @use "../abstract/media-queries" as mq;
 @use "../abstract/vars" as vars;
+
 //header index
-.header{
-  
-    background-image: url("../img/web 1920.png");
-    background-size:cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    height: 100vh;
-    width: 100%;
-
-    @include mq.respond-to(mq.$phone){
-        background-size:cover;
-        height: 50vh;
-    }
-
-    h1{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding-top: 11vw;
-
-    }
-}
-//header Historia
-.header-historia{
-    background-image: url("../img/web2.png");
-    background-size:cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    height: 100vh;
-    width: 100%;
-    h1{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding-top: 11vw;
-    }
+.background-section {
     
+
+    background-image: url("../img/web 1920.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100vh;
+    width: 100%;
+    @include mq.respond-to(mq.$phone) {
+    
+        background-image: url("../img/inicio.png");
+        background-size: cover;
+        background-position: center;
+        height: 100vh;
+        width: 100%;
+
+    }
+    h1 {
+        font-size: vars.$fs-gt;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-top:13rem ;
+    
+        @include mq.respond-to(mq.$phone) {
+            font-size: vars.$fs-xlg;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-top:23rem ;
+    
+    }
+    }
+
 }
+
+
+//header Historia
+.background-historia {
+    background-image: url("../img/web2.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100vh;
+    width: 100%;
+
+    @include mq.respond-to(mq.$phone) {
+        background-image: url("../img/historia.png");
+        background-size: cover;
+        background-position: center;
+        height: 100vh;
+        width: 100%;
+    
+        
+    }
+
+    h1 {
+        font-size: vars.$fs-xxlg;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-top:12rem ;
+
+        @include mq.respond-to(mq.$phone) {
+            font-size: vars.$fs-xlg;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-top:23rem ;
+    
+    }
+
+    }
+}
+

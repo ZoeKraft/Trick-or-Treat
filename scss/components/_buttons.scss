@@ -1,4 +1,5 @@
 @use "../abstract/vars" as vars;
+@use "../abstract/media-queries" as mq;
 
 .ctn-button{
     display: flex;
@@ -21,4 +22,8 @@
         background-color: darken( vars.$primary-color, 30%); // Color al pasar el ratón
     }
 
+
+    @include mq.respond-to(mq.$phone) {
+        padding: 1.5rem 4rem;
+    }
 }

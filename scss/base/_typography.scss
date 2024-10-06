@@ -1,43 +1,78 @@
 @use "../abstract/vars" as vars;
 @use "../abstract/media-queries" as mq;
 
-.nav-list-link{
-    color:vars.$clr-yellow;
+.nav-list-link {
+    color: vars.$clr-yellow;
     text-decoration: none;
     font-size: vars.$fs-sm;
 }
-.main-title{
+
+.main-title {
     font-weight: 100;
     font-family: vars.$ff-title;
     font-size: vars.$fs-gt;
-    color:vars.$clr-white;
+    color: vars.$clr-white;
     text-align: center;
 
-    @include mq.respond-to(mq.$phone){
+    @include mq.respond-to(mq.$phone) {
         font-size: vars.$fs-xlg;
     }
 }
 
-.second-title{
+.second-title {
     font-weight: 100;
     font-family: vars.$ff-title;
     font-size: vars.$fs-gt;
-    color:vars.$clr-white;
+    color: vars.$clr-white;
     text-align: center;
     color: vars.$clr-orange;
-    
-    
+
+    @include mq.respond-to(mq.$phone) {
+        font-size: vars.$fs-xlg;
+        text-align: center;
+        padding-top: 5rem;
+
+
+    }
+
 }
-.text-preview{
-    color:vars.$clr-white;
+
+
+
+.text-preview {
+   color:vars.$clr-white;
     font-family: vars.$ff-main;
     font-size: vars.$fs-sm;
+   
+
+    @include mq.respond-to(mq.$phone) {
+        text-align: center;
+        
+        p{
+            padding: 1rem 2rem;
+        }
+
+    }
+
+    
 }
-.footer-title{
+
+.footer-title {
     font-size: vars.$fs-md;
     font-family: vars.$ff-secondary;
+    text-align: center;
 }
-.secondary-title{
-    color:vars.$clr-orange;
 
+.secondary-title {
+    color: vars.$clr-orange;
+
+    @include mq.respond-to(mq.$phone) {
+
+    }
+
+}
+
+.footer-text{
+  text-align: center;
+  text-decoration: none;
 }
