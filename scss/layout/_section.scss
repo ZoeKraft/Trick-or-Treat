@@ -3,51 +3,54 @@
 //INDEX
 //section preview
 
-.preview{
+.preview {
     display: flex;
-    flex-direction:row;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
     padding-top: 10rem;
-   
-    @include mq.respond-to(mq.$phone){  
+
+    @include mq.respond-to(mq.$phone) {
         flex-direction: column;
 
-        img{
+        img {
             padding: 0;
         }
     }
-    
-}
-.ctn-preview{
-background-color: vars.$clr-secondary;
-background-size:contain;
-background-repeat: no-repeat;
-background-position: center;
-height: 100vh;
-width: 100%;
-overflow: hidden;
 
 }
+
+.ctn-preview {
+    background-color: vars.$clr-secondary;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+
+}
+
 //section presentation
 
-.ctn-presentation{
+.ctn-presentation {
     background-color: vars.$clr-main;
     background-color: vars.$clr-main;
     height: 100vh;
     width: 100%;
 }
-.presentation{
+
+.presentation {
     display: flex;
     padding-top: 6rem;
     align-items: center;
     justify-content: center;
 
-    @include mq.respond-to(mq.$phone){
+    @include mq.respond-to(mq.$phone) {
         flex-direction: column;
 
 
-        .padding-left{
+        .padding-left {
             padding-left: 0;
         }
     }
@@ -55,22 +58,23 @@ overflow: hidden;
 
 
 //section game
-.ctn-game{
+.ctn-game {
     background-color: vars.$clr-secondary;
     background-image: url("../img/estrellas.png");
-    background-size:cover;
+    background-size: cover;
     background-position: center;
     height: 100vh;
     width: 100%;
 
 
 }
-.game{
+
+.game {
     align-items: center;
     justify-content: center;
     padding-top: 5rem;
 
-    @include mq.respond-to(mq.$phone){
+    @include mq.respond-to(mq.$phone) {
 
         padding-top: 10rem;
     }
@@ -80,45 +84,85 @@ overflow: hidden;
 
 //HISTORIA
 //section character
-.ctn-character{
+.ctn-character {
     background-color: vars.$clr-secondary;
     height: 80vh;
     width: 100%;
 
+    @include mq.respond-to(mq.$phone) {
+
+        height: 100%;
+    }
+
 }
-.character{
+
+.character {
     display: flex;
     padding-top: 6rem;
     align-items: center;
     justify-content: center;
+
+    @include mq.respond-to(mq.$phone) {
+        flex-direction: column;
+
+        img {
+            padding: 0;
+        }
+    }
 }
 
 //enemies
-.ctn-enemies{
+.ctn-enemies {
     background-color: vars.$clr-secondary;
     height: 80vh;
     width: 100%;
 }
-.enemies{
+
+.enemies {
     display: flex;
     padding-top: 6rem;
     align-items: center;
     justify-content: center;
+
+    @include mq.respond-to(mq.$phone) {
+        flex-direction: column;
+        padding-top: 5rem;
+
+
+        img {
+            padding: 0;
+        }
+    }
 }
 
 //objects
-.ctn-objects{
+.ctn-objects {
     background-color: vars.$clr-secondary;
     height: 80vh;
     width: 100%;
+
+    @include mq.respond-to(mq.$phone) {
+        height: 100%;
+    }
 }
-.objects{
+
+.objects {
     display: flex;
     padding-top: 6rem;
     align-items: center;
     justify-content: center;
+
+    @include mq.respond-to(mq.$phone) {
+        flex-direction: column;
+    padding-bottom: 5rem;
+
+        img {
+            padding: 0;
+        }
+    }
 }
-.img-objects{
+
+.img-objects {
     width: 15rem;
     height: 13rem;
     padding-left: 8rem;
@@ -128,20 +172,36 @@ overflow: hidden;
 
 //scenery
 
-.ctn-scenery{
+.ctn-scenery {
     background-color: vars.$clr-secondary;
     height: 100vh;
     width: 100%;
 }
 
-.scenery{
+.scenery {
     align-items: center;
     justify-content: center;
-   
+
+    @include mq.respond-to(mq.$phone) {
+        flex-direction: column;
+        align-items: center ;
+
+
+        img {
+            padding: 0;
+        }
+    }
+
 }
-.img-scenery{
+
+.img-scenery {
     padding-left: 17em;
     width: 58rem;
     height: 29rem;
     padding-bottom: 4rem;
+
+    @include mq.respond-to(mq.$phone) {
+        width: 20rem;
+        height: 10rem;
+    }
 }

@@ -39,11 +39,17 @@
 
 .padding-left{
     padding-left: 9rem;
-
+    @include mq.respond-to(mq.$phone){
+     padding-left: 0;
+    }
   
 }
 .padding-right{
     padding-right: 9rem;
+
+    @include mq.respond-to(mq.$phone){
+        
+    }
 
     
 }
