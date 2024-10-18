@@ -1,20 +1,25 @@
+//Colores 
 $clr-main:#1C1462;
 $clr-secondary: #0C0C0C;
 $clr-orange: #FF6600;
 $clr-yellow: #F2CC0C;
 $clr-white: hsl(0, 0%, 100%);
-//button
-$primary-color: #D9D9D9; // Color principal
-$text-color: #F28705; // Color del texto
 
+//boton
+$primary-color: #D9D9D9; 
+$text-color: #F28705; 
+
+//tipo de tipografia
 $fw-regular: 400;
 $fw-semibold: 600;
 $fw-bold: 700;
 
+//tipografias
 $ff-title:  "Metal Mania";
 $ff-main: "Bree Serif", serif;
 $ff-secondary:"Bree Serif", serif;
 
+//tamanos de tipografia
 $fs-sm: 1.25rem;
 $fs-md: 1.563rem;
 $fs-xmd: 1.875rem;

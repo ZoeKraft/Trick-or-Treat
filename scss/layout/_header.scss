@@ -4,7 +4,6 @@
 //header index
 .background-section {
     
-
     background-image: url("../img/web 1920.png");
     background-size: cover;
     background-repeat: no-repeat;
@@ -20,6 +19,7 @@
         width: 100%;
 
     }
+
     h1 {
         font-size: vars.$fs-gt;
         display: flex;
@@ -40,7 +40,7 @@
 }
 
 
-//header Historia
+//header Historia y reglas
 .background-historia {
     background-image: url("../img/web2.png");
     background-size: cover;

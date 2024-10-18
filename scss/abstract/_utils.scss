@@ -1,5 +1,6 @@
 @use "../abstract/vars" as vars;   
 @use "../abstract/media-queries" as mq;
+
 .mt-1{ margin-top: 1rem; }
 .mt-2{ margin-top: 2rem; }
 .mt-3{ margin-top: 3rem; }
@@ -37,38 +38,46 @@
 .pr-5{padding-right: 5rem; }
 .pr-5{padding-right: 6rem; }
 
+
 .padding-left{
     padding-left: 9rem;
     @include mq.respond-to(mq.$phone){
      padding-left: 0;
     }
   
+
+
 }
 .padding-right{
     padding-right: 9rem;
-
-    @include mq.respond-to(mq.$phone){
-        
-    }
-
-    
+ 
 }
+
+
 .relative{
     position: relative;
 }
 
+
+
 .auto{
     margin: auto;
 }
+
+
 .absolute{
     position: absolute;
 }
+
+
 
 .mobile-text-center{
     @include mq.respond-to(mq.$phone){
         text-align: center;
     }
 }
+
+
 
 .hi{
     overflow: hidden;

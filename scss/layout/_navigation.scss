@@ -5,21 +5,23 @@
     display: flex;
     justify-content: space-between;
     padding: .5rem 2rem ;
-    
     background:vars.$clr-secondary;
 }
+
 .nav-list{
     display: flex;
     align-items: center;
     list-style: none;
     gap: 5rem;
 }
+
 .logo{
     width: 3rem;
     display: flex;
     align-items: center;
 
 }
+
 .menu-toggle {
     display: none;
     flex-direction: column;
@@ -33,26 +35,25 @@
     background-color: white;
     margin: 3px 0;
 }
-/* Media Queries para dispositivos móviles */
 
 @include mq.respond-to(mq.$phone){
   .nav-list {
-        display: none; /* Esconde el menú por defecto */
+        display: none; // Esconde el menú por defecto 
         flex-direction: column;
         width: 100%;
         background-color: vars.$clr-secondary;
         position: absolute;
-        top: 60px; /* Para que no se superponga al header */
+        top: 60px; // Para que no se superponga al header 
         padding-bottom: 10px;
         left: 0;
     }
 
     .nav-list.active {
-        display: flex; /* Muestra el menú cuando está activo */
+        display: flex; // Muestra el menú cuando está activo 
     }
 
     .menu-toggle {
-        display: flex; /* Muestra el botón hamburguesa */
+        display: flex; // Muestra el botón hamburguesa 
         align-items: center;
         justify-content: center;
        

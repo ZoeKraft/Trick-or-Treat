@@ -37,24 +37,22 @@
 
 }
 
-
-
 .text-preview {
-   color:vars.$clr-white;
+    color: vars.$clr-white;
     font-family: vars.$ff-main;
     font-size: vars.$fs-sm;
-   
+
 
     @include mq.respond-to(mq.$phone) {
         text-align: center;
-        
-        p{
+
+        p {
             padding: 1rem 2rem;
         }
 
     }
 
-    
+
 }
 
 .footer-title {
@@ -67,19 +65,27 @@
     color: vars.$clr-orange;
 
     @include mq.respond-to(mq.$phone) {
-padding: 0;
+        padding: 0;
     }
-
 }
 
-.footer-text{
-  text-align: center;
-  text-decoration: none;
+.footer-text {
+    text-align: center;
+    text-decoration: none;
 }
 
-.small-text{
+.small-text {
 
     @include mq.respond-to(mq.$phone) {
         text-align: center;
     }
+}
+
+.game-title {
+    font-weight: 100;
+    font-family: vars.$ff-title;
+    font-size: vars.$fs-xxlg;
+    color: vars.$clr-white;
+    text-align: center;
+
 }

@@ -13,7 +13,6 @@
     @include mq.respond-to(mq.$phone){
         height: 100vh;
     }
-
 }
 
 .footer-icons{
@@ -21,10 +20,12 @@
     gap: 1rem;
     justify-content: center;
 }
+
 .footer-list{
     list-style: none;
     line-height: 2rem;
 }
+
 .copyright{
     display: flex;
     justify-content: center;
