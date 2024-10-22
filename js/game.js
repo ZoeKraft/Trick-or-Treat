@@ -33,6 +33,7 @@ gameScene.create = function () {
     // Añadir el fondo
     this.background = this.add.image(0, 0, 'background').setOrigin(0, 0);
     this.background.setDisplaySize(6200, window.innerHeight);
+    
     this.physics.world.setBounds(0, 0, this.background.displayWidth, this.background.displayHeight - 30);
 
     // Crear el personaje
@@ -139,7 +140,7 @@ this.collisionText.visible = false; // Inicialmente oculto
         { x: 4500, y: 520 },
         { x: 4900, y: 380 },
         { x: 5200, y: 380 },
-        { x: 5600, y: 250 }
+        { x: 5600, y: 200 }
     ];
 
     platformPositions.forEach(pos => {
@@ -149,6 +150,7 @@ this.collisionText.visible = false; // Inicialmente oculto
     });
 
     this.physics.add.collider(this.player, this.platforms);
+    this.physics.add.collider(this.objects, this.platforms);
     this.cameras.main.setBounds(0, 0, this.background.displayWidth, this.background.displayHeight);
     this.cameras.main.startFollow(this.player);
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -166,6 +168,7 @@ this.collisionText.visible = false; // Inicialmente oculto
     this.collisionText.visible = false; // Inicialmente oculto
 };
 
+
 // Función para manejar la recolección de objetos
 gameScene.collectObject = function (player, object) {
     object.destroy(); // Destruir el objeto recolectado
@@ -176,10 +179,9 @@ gameScene.showCollisionMessage = function (message) {
     this.collisionText.setText(message);
     this.collisionText.visible = true;
 
-    // Hacer que el mensaje se oculte después de 1 segundo
+    // Hacer que el mensaje se oculte después de 2 segundos
     this.time.delayedCall(1000, () => {
         this.collisionText.visible = false;
-        this.isColliding = false; // Permitir colisiones nuevamente
     });
 };
 
@@ -188,12 +190,35 @@ gameScene.handleCollision = function (player, enemy) {
         this.isColliding = true; 
         this.showCollisionMessage('¡Chocaste con un enemigo!');
 
-    
+        this.time.delayedCall(1000, () => {
+            player.setPosition(100, 200); 
+            this.isColliding = false; 
+            
+            // Reanudar el juego
+            this.scene.resume();
+        });
     }
 };
 
 
+gameScene.resizeBackground = function () {
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
 
+    // Ajustar el tamaño del fondo manteniendo la relación de aspecto
+    if (windowWidth / windowHeight > 6200 / windowHeight) {
+        // Si la relación de aspecto es más ancha que el fondo
+        this.background.setDisplaySize(windowHeight * (6200 / windowHeight), windowHeight);
+    } else {
+        // Si la relación de aspecto es más estrecha que el fondo
+        this.background.setDisplaySize(windowWidth, windowWidth * (windowHeight / 6200));
+    }
+
+    // Centrar el fondo
+    this.background.setOrigin(0.5, 0.5);
+    this.background.x = windowWidth / 2;
+    this.background.y = windowHeight / 2;
+};
 
 
 
@@ -278,14 +303,14 @@ gameScene.update = function () {
     });
 };
 
-// Configuración del juego
 let config = {
     type: Phaser.AUTO,
-    width: 6200,
-    height: window.innerHeight,
+    width: window.innerWidth, // Ajustar el ancho al tamaño de la ventana
+    height: window.innerHeight, // Ajustar la altura al tamaño de la ventana
     scene: gameScene,
     scale: {
-        mode: Phaser.Scale.RESIZE
+        mode: Phaser.Scale.RESIZE,
+        autoCenter: Phaser.Scale.CENTER_BOTH // Centrar el juego
     },
     physics: {
         default: 'arcade',
@@ -295,6 +320,7 @@ let config = {
         }
     }
 };
+
 
 // Inicializar el juego
 let game = new Phaser.Game(config);
