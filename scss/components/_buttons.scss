@@ -5,7 +5,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 50vh;
+    height: 35vh;
 }
 
 .start-game {
@@ -19,7 +19,7 @@
     transition: background-color 0.3s ease;
 
     &:hover {
-        background-color: darken( vars.$primary-color, 30%); // Color al pasar el ratón
+        background-color: darken( vars.$primary-color, 30%);
     }
 
 

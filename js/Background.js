@@ -1,7 +1,7 @@
-export default class Background {
-    constructor(scene, x, y, key) {
-        this.scene = scene;
-        this.sprite = this.scene.add.image(x, y, key).setOrigin(0, 0).setDisplaySize(6200, window.innerHeight);
-        this.scene.physics.world.setBounds(0, 0, this.sprite.displayWidth, this.sprite.displayHeight - 30);
+export default class Background extends Phaser.GameObjects.Image {
+    constructor(scene, x, y, texture) {
+        super(scene, x, y, texture);
+        scene.add.existing(this);
+        this.setOrigin(0, 0); // Establecer origen en la esquina superior izquierda
     }
 }
