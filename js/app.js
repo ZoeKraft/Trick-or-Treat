@@ -21,8 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (startGameButton) {
         startGameButton.addEventListener('click', function() {
-            // Abrir una nueva ventana para el juego
-            window.open('menu.html', '_blank'); 
+            window.location.href ='menu.html'; 
         });
     }
 
@@ -30,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (start) {
         start.addEventListener('click', function() {
-            window.open('juego.html', '_blank'); 
+            window.location.href ='juego.html'; 
         });
     }
 });
