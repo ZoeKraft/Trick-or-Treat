@@ -66,6 +66,7 @@ gameScene.create = function () {
     // Crear plataformas
     this.platforms = new Platforms(this);
 
+
     // Crear objetos aleatorios
     this.objects = [];
     for (let i = 0; i < 10; i++) {
