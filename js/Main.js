@@ -2,7 +2,9 @@ import Player from './Player.js';
 import Platforms from './Platforms.js';
 import Camera from './Camera.js';
 import Enemy from './Enemy.js';
-import GameObject from './Object.js'; 
+import GameObject from './Object.js';
+import Pause from './Pause.js';
+import Goal from './Goal.js';
 
 let gameScene = new Phaser.Scene('Game');
 
@@ -18,16 +20,20 @@ gameScene.preload = function () {
     this.load.image('object3', './img/sweet3.png');
     this.load.image('enemie1', './img/enemigo-naranja.png');
     this.load.image('enemie2', './img/enemigo-morado.png');
+    this.load.image('pauseButton', './img/pause.png');
+    this.load.image('playButton', './img/play.png');
+    this.load.image('goal', './img/goal.png');
+
 
     // Animaciones
-    this.load.spritesheet('player', './img/player3.png', {
+    this.load.spritesheet('player', './img/player.png', {
         frameWidth: 175,
         frameHeight: 175,
         margin: -1,
         spacing: -1
     });
 
-    this.load.spritesheet('jump', './img/salto.png', {
+    this.load.spritesheet('jump', './img/juump.png', {
         frameWidth: 175,
         frameHeight: 175,
         margin: 0,
@@ -63,9 +69,12 @@ gameScene.create = function () {
         this.enemies2.push(new Enemy(this, x, y, 'enemie2', 1, 100, { min: y - 150, max: y + 150 }, true));
     }
 
+    
+    // Crear el objetivo al final del juego
+    this.goal = new Goal(this, 6050, 600); // Ajusta la posición según sea necesario
+    
     // Crear plataformas
     this.platforms = new Platforms(this);
-
 
     // Crear objetos aleatorios
     this.objects = [];
@@ -82,14 +91,14 @@ gameScene.create = function () {
         fill: '#fff'
     }).setScrollFactor(0);
 
+    // Crear la instancia de la clase Pause
+    this.pause = new Pause(this);
 
     // Inicializar las teclas de movimiento
     this.cursors = this.input.keyboard.createCursorKeys();
 
-
     // Crear la cámara
     this.camera = new Camera(this, this.player.sprite);
-
 
     // Detección de colisión con enemigos
     this.enemies1.forEach(enemy => {
@@ -98,28 +107,24 @@ gameScene.create = function () {
     this.enemies2.forEach(enemy => {
         this.physics.add.overlap(this.player.sprite, enemy.sprite, this.restartGame, null, this);
     });
+
+
 };
-
-
 
 // Función para reiniciar el juego
 gameScene.restartGame = function () {
-  
     const collisionText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, "!GAME OVER¡", {
         fontSize: '40px',
         fill: '#fff'
-    }).setOrigin(0.5); 
+    }).setOrigin(0.5);
 
-    collisionText.setScrollFactor(0); 
+    collisionText.setScrollFactor(0);
 
-    
     this.time.delayedCall(1000, () => {
-        collisionText.destroy(); 
-        this.scene.restart(); 
+        collisionText.destroy();
+        this.scene.restart();
     });
 };
-
-
 
 // Mostrar mensaje de colisión
 gameScene.showCollisionMessage = function (message) {
@@ -129,19 +134,17 @@ gameScene.showCollisionMessage = function (message) {
     });
 };
 
-
-
 // Función de actualización
 gameScene.update = function () {
-    // Actualizar el jugador
-    this.player.update(this.cursors);
+    if (!this.pause.isPaused) { // Solo actualizar si no está en pausa
+        // Actualizar el jugador
+        this.player.update(this.cursors);
 
-    // Actualizar enemigos
-    this.enemies1.forEach(enemy => enemy.update());
-    this.enemies2.forEach(enemy => enemy.update());
+        // Actualizar enemigos
+        this.enemies1.forEach(enemy => enemy.update());
+        this.enemies2.forEach(enemy => enemy.update());
+    }
 };
-
-
 
 // Configuración del juego
 let config = {
@@ -157,7 +160,6 @@ let config = {
         }
     }
 };
-
 
 // Inicializar el juego
 let game = new Phaser.Game(config);

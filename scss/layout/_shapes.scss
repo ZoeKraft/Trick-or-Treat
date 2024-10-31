@@ -128,3 +128,13 @@
         padding: 2rem;
     }
 }
+
+.img-goal{
+    width: 20rem;
+    height:20rem;
+    @include mq.respond-to(mq.$phone) {
+        width: 20rem;
+        height: 20rem;
+        padding: 2rem;
+    }
+}
