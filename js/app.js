@@ -32,4 +32,11 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.href ='juego.html'; 
         });
     }
+    const home = document.getElementById('home');
+
+    if (home) {
+        home.addEventListener('click', function() {
+            window.location.href ='index.html'; 
+        });
+    }
 });

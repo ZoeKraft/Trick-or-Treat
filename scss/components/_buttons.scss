@@ -1,11 +1,17 @@
 @use "../abstract/vars" as vars;
 @use "../abstract/media-queries" as mq;
 
-.ctn-button{
+.ctn-button-start{
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 35vh;
+    height: 30vh;
+}
+
+.ctn-home-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .start-game {
@@ -15,6 +21,26 @@
     border: none;
     border-radius: 100px;
     padding: 1.5rem 8rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: darken( vars.$primary-color, 30%);
+    }
+
+
+    @include mq.respond-to(mq.$phone) {
+        padding: 1.5rem 4rem;
+    }
+}
+
+.home-button {
+    background-color: vars.$primary-color;
+    color:  vars.$text-color;
+    font-size: vars.$fs-md;
+    border: none;
+    border-radius: 100px;
+    padding: 1rem 4rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
 

@@ -32,15 +32,15 @@ export default class Pause {
             .setOrigin(0, 0)
             .setDisplaySize(buttonSize, buttonSize)
             .on('pointerdown', () => this.togglePause())
-            .setVisible(false); // Ocultar el botón de pausa al inicio
+            .setVisible(false); 
 
-        // Añadir botones al contenedor
+      
         this.buttonContainer.add(this.playButton);
         this.buttonContainer.add(this.pauseButton);
     }
 
     updateButtonsPosition() {
-        // Ajustar la posición del contenedor si es necesario
+       
         this.buttonContainer.x = this.scene.cameras.main.width - 66;
         this.buttonContainer.y = 16;
     }
@@ -65,15 +65,15 @@ export default class Pause {
         }
     }
     showPausePanel() {
-        // Ajusta la posición del panel a la derecha del botón
-        this.panel = this.scene.add.container(this.scene.cameras.main.width - 200, this.scene.cameras.main.centerY); // Cambiar la posición aquí
+        
+        this.panel = this.scene.add.container(this.scene.cameras.main.width - 200, this.scene.cameras.main.centerY); 
     
         const background = this.scene.add.graphics();
-        background.fillStyle(0x000000, 0.8); // Color más oscuro y opaco
-        background.fillRect(-150, -100, 300, 300); // Tamaño del fondo ajustado
+        background.fillStyle(0x000000, 0.8); 
+        background.fillRect(-150, -100, 300, 300); 
         this.panel.add(background);
     
-        const titleStyle = { fontSize: '48px', fill: '#F28705', fontFamily: '"Bree Serif", serif', stroke: '#000', strokeThickness: 5 }; // Color dorado con borde negro
+        const titleStyle = { fontSize: '48px', fill: '#F28705', fontFamily: '"Bree Serif", serif', stroke: '#000', strokeThickness: 5 }; 
         const text = this.scene.add.text(0, -40, 'PAUSE', titleStyle).setOrigin(0.5);
         this.panel.add(text);
     
@@ -82,8 +82,8 @@ export default class Pause {
         const continueButton = this.scene.add.text(-80, 0, 'Continue', buttonStyle)
             .setInteractive()
             .on('pointerdown', () => this.togglePause())
-            .on('pointerover', () => continueButton.setStyle({ fill: '#F28705' })) // Cambiar color al pasar el mouse
-            .on('pointerout', () => continueButton.setStyle({ fill: '#fff' })); // Restaurar color
+            .on('pointerover', () => continueButton.setStyle({ fill: '#F28705' })) 
+            .on('pointerout', () => continueButton.setStyle({ fill: '#fff' })); 
         this.panel.add(continueButton);
     
         const restartButton = this.scene.add.text(-80, 40, 'Restart', buttonStyle)
