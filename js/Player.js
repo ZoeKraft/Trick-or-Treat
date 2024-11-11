@@ -10,6 +10,14 @@ export default class Player {
         this.sprite.setOffset(0, 0);
         this.sprite.setSize(80, 150);
 
+        // Propiedades del escudo
+        this.shieldActive = false;
+        this.shieldTime = 0;
+        this.shieldCooldown = 2000; 
+        this.shield = this.scene.add.image(this.sprite.x, this.sprite.y, 'shield').setOrigin(0.5).setAlpha(0);
+        this.shield.setScale(0.8);
+        this.shield.setDepth(this.sprite.depth + 1); 
+
         // Crear animaciones
         this.scene.anims.create({
             key: 'walk',
@@ -22,18 +30,18 @@ export default class Player {
         this.scene.anims.create({
             key: 'jump',
             frames: this.scene.anims.generateFrameNumbers('jump', { start: 0, end: 4 }),
-            frameRate: 6, // Aumenta el frameRate aquí
-            hideOnComplete: true,
-            repeat: 0
+            frameRate: 6, 
+            hideOnComplete: true, 
         });
+
 
         this.sprite.anims.play('walk');
         this.isJumping = false;
         this.isLanding = false; 
     }
 
-    update(cursors) {
-        // Movimiento horizontal
+    update(cursors, spacebar) {
+        // Movimiento 
         if (cursors.left.isDown) {
             this.sprite.setVelocityX(-300);
             this.sprite.flipX = true;
@@ -54,14 +62,13 @@ export default class Player {
             this.sprite.setVelocityY(-790);
             this.sprite.canJump = false;
             this.isJumping = true;
-            this.isLanding = false; // Asegúrate de que no esté aterrizando
+            this.isLanding = false; 
             this.sprite.anims.play('jump');
 
             // Esperar a que termine la animación de salto
             this.sprite.once('animationcomplete', (animation) => {
                 if (animation.key === 'jump') {
                     this.isJumping = false;
-                    // Aquí se puede permitir un tiempo de aterrizaje
                     this.scene.time.delayedCall(100, () => {
                         if (this.sprite.body.onFloor()) {
                             this.isLanding = false;
@@ -72,6 +79,21 @@ export default class Player {
             });
         }
 
+        // Activar el escudo
+        if (spacebar.isDown && !this.shieldActive && this.scene.time.now > this.shieldTime + this.shieldCooldown) {
+            this.activateShield();
+        }
+
+        // Mantener el escudo activo durante un tiempo determinado
+        if (this.shieldActive && this.scene.time.now > this.shieldTime + this.shieldCooldown) {
+            this.deactivateShield();
+        }
+
+        // Actualizar la posición del escudo
+        if (this.shieldActive) {
+            this.shield.setPosition(this.sprite.x, this.sprite.y);
+        }
+
         // Permitir el salto cuando el jugador está en el suelo
         if (this.sprite.body.onFloor()) {
             this.sprite.canJump = true;
@@ -79,8 +101,19 @@ export default class Player {
                 this.sprite.anims.play('walk', true);
             }
         }
-
-        // Asegúrate de que el sprite sea visible
         this.sprite.visible = true;
+    }
+
+    // Función para activar el escudo
+    activateShield() {
+        this.shieldActive = true;
+        this.shieldTime = this.scene.time.now;
+        this.shield.setAlpha(1); 
+    }
+
+    // Función para desactivar el escudo
+    deactivateShield() {
+        this.shieldActive = false;
+        this.shield.setAlpha(0); 
     }
 }

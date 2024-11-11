@@ -41,6 +41,7 @@ class GameScene extends Phaser.Scene {
         this.load.image('playButton', './img/play.png');
         this.load.image('goal', './img/goal.png');
         this.load.image('inventory', './img/inventory.png');
+        this.load.image('shield', './img/shield1.png');
 
         // Animaciones
         this.load.spritesheet('player', './img/player.png', {
@@ -56,8 +57,6 @@ class GameScene extends Phaser.Scene {
             margin: 0,
             spacing: 0
         });
-
-
 
         // Load json file
         this.load.json('levelData', './data/levelData.json');
@@ -89,7 +88,7 @@ class GameScene extends Phaser.Scene {
         }
 
         // Crear el objetivo al final del juego
-        this.goal = new Goal(this, 6050, 600); // Ajusta la posición según sea necesario
+        this.goal = new Goal(this, 6050, 600);
 
         // Crear plataformas
         this.platforms = new Platforms(this);
@@ -101,7 +100,7 @@ class GameScene extends Phaser.Scene {
             let x = Phaser.Math.Between(300, 5900);
             let y = Phaser.Math.Between(100, 500);
             let objectType = Phaser.Math.Between(1, 3) === 1 ? 'popsicle' : (Phaser.Math.Between(1, 3) === 2 ? 'candy' : 'bar');
-            this.objects.push(new GameObject(this, x, y, objectType)); // Creamos el objeto de tipo GameObject
+            this.objects.push(new GameObject(this, x, y, objectType)); 
         }
 
         // Crear el texto de puntuación
@@ -109,8 +108,6 @@ class GameScene extends Phaser.Scene {
             fontSize: '32px',
             fill: '#fff'
         }).setScrollFactor(0);
-
-
 
         // Crear la instancia de la clase Pause
         this.pause = new Pause(this);
@@ -122,24 +119,36 @@ class GameScene extends Phaser.Scene {
         // Crear la cámara
         this.camera = new Camera(this, this.player.sprite);
 
-        // Detección de colisión con enemigos
-        this.enemies1.forEach(enemy => {
-            this.physics.add.overlap(this.player.sprite, enemy.sprite, this.restartGame, null, this);
-        });
-        this.enemies2.forEach(enemy => {
-            this.physics.add.overlap(this.player.sprite, enemy.sprite, this.restartGame, null, this);
-        });
+       // Colisión con enemigos
+    this.enemies1.forEach(enemy => {
+        this.physics.add.overlap(this.player.sprite, enemy.sprite, (player, enemy) => {
+            if (this.player.shieldActive) {
+                if (this.player.sprite && enemy && enemy.sprite) {
+                    enemy.destroy(); 
+                    this.showCollisionMessage('¡Escudo activado!');
+                }
+            } else {
+                this.restartGame();
+            }
+        }, null, this);
+    });
 
+    this.enemies2.forEach(enemy => {
+        this.physics.add.overlap(this.player.sprite, enemy.sprite, (player, enemy) => {
+            if (this.player.shieldActive) {
+                if (this.player.sprite && enemy && enemy.sprite) {
+                    enemy.destroy(); 
+                    this.showCollisionMessage('¡Escudo activado!');
+                }
+            } else {
+                this.restartGame();
+            }
+        }, null, this);
+    });
 
         // Crear la instancia de Inventario 
         this.inventory = new Inventory(this);
-
-
-
     }
-
-
-
     // Función de reinicio del juego
     restartGame() {
         const collisionText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, "!GAME OVER¡", {
@@ -154,14 +163,13 @@ class GameScene extends Phaser.Scene {
             this.scene.restart();
         });
     }
-
-    // Mostrar un mensaje al recoger un objeto
     showCollisionMessage(message) {
         const collisionText = this.add.text(this.player.sprite.x, this.player.sprite.y - 100, message, { fontSize: '20px', fill: '#fff' });
         this.time.delayedCall(1000, () => {
             collisionText.destroy(); // Eliminar el mensaje después de 1 segundo
         });
     }
+
     // Función de actualización
     update() {
         if (!this.pause.isPaused) { // Solo actualizar si no está en pausa
@@ -171,11 +179,9 @@ class GameScene extends Phaser.Scene {
             // Actualizar enemigos
             this.enemies1.forEach(enemy => enemy.update());
             this.enemies2.forEach(enemy => enemy.update());
-
         }
     }
 }
-
 
 // Configuración del juego
 let config = {
