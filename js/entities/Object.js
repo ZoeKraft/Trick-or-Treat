@@ -1,4 +1,4 @@
-class GameObject {
+export default class GameObject {
     static puntosPorObjeto = {
         popsicle: 20,
         candy: 30,
@@ -14,8 +14,6 @@ class GameObject {
         this.sprite.scale = 0.5;
         this.sprite.setOffset(0, 0);
         this.sprite.setSize(100, 100);
-
-        // Detectamos la colisión con el jugador
         this.scene.physics.add.overlap(this.scene.player.sprite, this.sprite, this.collect, null, this);
     }
 
@@ -28,21 +26,14 @@ class GameObject {
         this.scene.puntosTotales += puntosGanados;
         this.scene.scoreText.setText('Points: ' + this.scene.puntosTotales);
         object.destroy();
-    
-        // Crear el objeto para agregar al inventario con nombre, clave de imagen y cantidad
         const inventoryItem = { name: this.type, imageKey: this.type };
-        
-        // Añadir el objeto al inventario
         this.scene.inventory.addItem(inventoryItem);
-    
-        // Mostrar el mensaje de la recolección
         this.scene.showCollisionMessage('You collected a ' + this.type + '!');
     }
-    
     
     destroy() {
         this.sprite.destroy();
     }
 }
 
-export default GameObject;
+

@@ -10,7 +10,7 @@ export default class Player {
         this.sprite.setOffset(0, 0);
         this.sprite.setSize(80, 150);
 
-        // Propiedades del escudo
+        //Shield
         this.shieldActive = false;
         this.shieldTime = 0;
         this.shieldCooldown = 2000; 
@@ -18,7 +18,7 @@ export default class Player {
         this.shield.setScale(0.8);
         this.shield.setDepth(this.sprite.depth + 1); 
 
-        // Crear animaciones
+        //Animations
         this.scene.anims.create({
             key: 'walk',
             frames: this.scene.anims.generateFrameNumbers('player', { start: 0, end: 4 }),
@@ -41,7 +41,6 @@ export default class Player {
     }
 
     update(cursors, spacebar) {
-        // Movimiento 
         if (cursors.left.isDown) {
             this.sprite.setVelocityX(-300);
             this.sprite.flipX = true;
@@ -57,7 +56,7 @@ export default class Player {
             }
         }
 
-        // Saltar
+        // Jump
         if (cursors.up.isDown && this.sprite.body.onFloor() && this.sprite.canJump) {
             this.sprite.setVelocityY(-790);
             this.sprite.canJump = false;
@@ -65,7 +64,7 @@ export default class Player {
             this.isLanding = false; 
             this.sprite.anims.play('jump');
 
-            // Esperar a que termine la animación de salto
+            // jump animation
             this.sprite.once('animationcomplete', (animation) => {
                 if (animation.key === 'jump') {
                     this.isJumping = false;
@@ -79,22 +78,20 @@ export default class Player {
             });
         }
 
-        // Activar el escudo
+        // activate shield
         if (spacebar.isDown && !this.shieldActive && this.scene.time.now > this.shieldTime + this.shieldCooldown) {
             this.activateShield();
         }
-
-        // Mantener el escudo activo durante un tiempo determinado
         if (this.shieldActive && this.scene.time.now > this.shieldTime + this.shieldCooldown) {
             this.deactivateShield();
         }
 
-        // Actualizar la posición del escudo
+        //  Update shield
         if (this.shieldActive) {
             this.shield.setPosition(this.sprite.x, this.sprite.y);
         }
 
-        // Permitir el salto cuando el jugador está en el suelo
+        // Landing
         if (this.sprite.body.onFloor()) {
             this.sprite.canJump = true;
             if (!this.isJumping && !this.isLanding) {
@@ -104,14 +101,12 @@ export default class Player {
         this.sprite.visible = true;
     }
 
-    // Función para activar el escudo
     activateShield() {
         this.shieldActive = true;
         this.shieldTime = this.scene.time.now;
         this.shield.setAlpha(1); 
     }
 
-    // Función para desactivar el escudo
     deactivateShield() {
         this.shieldActive = false;
         this.shield.setAlpha(0); 

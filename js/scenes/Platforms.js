@@ -1,14 +1,15 @@
 export default class Platforms {
-    constructor(scene) {
+    constructor(scene, levelDataFile) {
         this.scene = scene;
         this.platforms = this.scene.physics.add.staticGroup();
+        this.levelDataFile = levelDataFile; 
         this.loadPlatforms();
     }
 
     loadPlatforms() {
-        this.scene.load.json('levelData', 'levelData.json');
+        this.scene.load.json(this.levelDataFile, `./data/${this.levelDataFile}.json`); // Usar el archivo correcto según el nivel
         this.scene.load.once('complete', () => {
-            const levelData = this.scene.cache.json.get('levelData');
+            const levelData = this.scene.cache.json.get(this.levelDataFile); // Obtener los datos usando la clave específica
             this.createPlatforms(levelData.platforms);
         });
         this.scene.load.start();

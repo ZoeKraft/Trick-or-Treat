@@ -1,0 +1,61 @@
+{
+    "platforms": [
+        {
+            "x": 500,
+            "y": 380,
+            "tiles": 6,
+            "key": "platform3"
+        },
+        {
+            "x": 1100,
+            "y": 520,
+            "tiles": 6,
+            "key": "platform3"
+        },
+        {
+            "x": 1600,
+            "y": 370,
+            "tiles": 6,
+            "key": "platform3"
+        },
+        {
+            "x": 1900,
+            "y": 370,
+            "tiles": 6,
+            "key": "platform3"
+        },
+        {
+            "x": 2900,
+            "y": 370,
+            "tiles": 6,
+            "key": "platform3"
+        },
+        {
+            "x": 3500,
+            "y": 520,
+            "tiles": 6,
+            "key": "platform3"
+        },
+        {
+            "x": 4900,
+            "y": 520,
+            "tiles": 6,
+            "key": "platform3"
+        },
+        {
+            "x": 5200,
+            "y": 380,
+            "tiles": 6,
+            "key": "platform3"
+        },
+        {
+            "x": 5600,
+            "y": 200,
+            "tiles": 6,
+            "key": "platform3"
+        }
+    ]
+
+
+
+}

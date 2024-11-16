@@ -3,8 +3,6 @@ export default class Inventory {
         this.scene = scene;
         this.items = [];
         this.isVisible = false;
-
-        // Crear el botón para abrir el inventario
         this.inventoryButton = this.scene.add.image(50, 50, 'inventory')
             .setOrigin(0, 0)
             .setInteractive()
@@ -15,16 +13,14 @@ export default class Inventory {
         });
 
 
-        // Contenedor del inventario
+        // container 
         this.inventoryContainer = this.scene.add.container(0, 0).setDepth(10).setScrollFactor(0);  // Evitamos que el inventario se mueva con la cámara
         this.inventoryBackground = this.scene.add.graphics();
         this.inventoryContainer.add(this.inventoryBackground);
-
-        // Creamos un contenedor para las imágenes y textos de los objetos
         this.itemsContainer = this.scene.add.container(0, 0);
         this.inventoryContainer.add(this.itemsContainer);
 
-        // Título del inventario
+        // title
         this.inventoryItemsText = this.scene.add.text(170, 100, 'Inventory', {
             fontSize: '20px',
             fill: '#fff',
@@ -33,7 +29,7 @@ export default class Inventory {
         this.hideInventory();
     }
 
-    // Función para mostrar/ocultar el inventario
+    // see/dont function
     toggleInventory() {
         if (this.isVisible) {
             this.hideInventory();
@@ -43,7 +39,7 @@ export default class Inventory {
     }
 
 
-    // Función para mostrar el inventario
+    //visible function
     showInventory() {
         this.isVisible = true;
         this.inventoryBackground.clear();
@@ -53,7 +49,7 @@ export default class Inventory {
         this.inventoryContainer.setVisible(true);
     }
 
-    // Función para ocultar el inventario
+    //hide
     hideInventory() {
         this.isVisible = false;
         this.inventoryContainer.setVisible(false);
@@ -65,21 +61,21 @@ export default class Inventory {
         let startX = 250;
         let startY = 180;
 
-        // Mostrar los objetos con su imagen, nombre y cantidad
+        //items
         this.items.forEach((item, index) => {
 
-            // Imagen del objeto
+
             const itemImage = this.scene.add.image(startX, startY, item.imageKey)
                 .setOrigin(0.5)
-                .setScale(0.3); // Ajustamos el tamaño de la imagen
+                .setScale(0.3); 
 
-            // Nombre del objeto
+            
             const itemName = this.scene.add.text(startX, startY + 50, item.name, {
                 fontSize: '16px',
                 fill: '#fff'
             }).setOrigin(0.5, 0);
 
-            // Cantidad del objeto
+           
             const itemQuantity = this.scene.add.text(startX, startY + 70, `Quantity: ${item.quantity}`, {
                 fontSize: '14px',
                 fill: '#fff'
@@ -94,7 +90,7 @@ export default class Inventory {
         });
     }
 
-    // Función para agregar un objeto al inventario
+    // add items funtion
     addItem(item) {
         const existingItem = this.items.find(existing => existing.name === item.name);
         if (existingItem) {
