@@ -5,15 +5,15 @@ export default class GameObject {
         bar: 50
     };
 
-    constructor(scene, x, y, type) {
+    constructor(scene, x, y, type, scale) {
         this.scene = scene;
         this.type = type;
         this.points = this.getPoints(type);
         this.sprite = this.scene.physics.add.sprite(x, y, type);
         this.sprite.setCollideWorldBounds(true);
-        this.sprite.scale = 0.5;
+        this.sprite.setScale(scale * 0.5); 
         this.sprite.setOffset(0, 0);
-        this.sprite.setSize(100, 100);
+        this.sprite.setSize(100 * scale, 100 * scale); 
         this.scene.physics.add.overlap(this.scene.player.sprite, this.sprite, this.collect, null, this);
     }
 
@@ -28,12 +28,9 @@ export default class GameObject {
         object.destroy();
         const inventoryItem = { name: this.type, imageKey: this.type };
         this.scene.inventory.addItem(inventoryItem);
-        this.scene.showCollisionMessage('You collected a ' + this.type + '!');
     }
     
     destroy() {
         this.sprite.destroy();
     }
 }
-
-

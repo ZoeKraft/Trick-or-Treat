@@ -8,6 +8,7 @@ import GameObject from "../entities/Object.js";
 
 import Pause from "../utils/Pause.js";
 import Inventory from "../utils/Inventory.js";
+import Joystick from "../utils/Joystick.js";
 
 export default class Level2 extends Phaser.Scene {
     constructor() {
@@ -28,11 +29,13 @@ export default class Level2 extends Phaser.Scene {
         this.cursors = null;
         this.spacebar = null;
         this.inventory = null;
+        this.joystick = null;
+        this.isMobile = false; 
     }
 
     preload() {
         this.load.image('background2', './img/background2.jpg');
-        this.load.image('platform2', './img/plataform2.png');  
+        this.load.image('platform2', './img/plataform2.png');
         this.load.image('popsicle', './img/sweet1.png');
         this.load.image('candy', './img/sweet2.png');
         this.load.image('bar', './img/sweet3.png');
@@ -64,70 +67,98 @@ export default class Level2 extends Phaser.Scene {
     }
 
     create() {
+        // Detect if the device is mobile
+        this.isMobile = this.sys.game.device.input.touch || window.innerWidth < 768;
+
+        //  original dimensions 
+        const originalBackgroundWidth = 6300;
+        const originalBackgroundHeight = 720;
+
+        // window dimensions
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+
+        const scale = Math.max(windowWidth / originalBackgroundWidth, windowHeight / originalBackgroundHeight);
 
         //Background
         this.background = this.add.image(0, 0, 'background2').setOrigin(0, 0);
-        this.background.setDisplaySize(6200, window.innerHeight);
-        this.physics.world.setBounds(0, 0, this.background.displayWidth, this.background.displayHeight - 30);
-
-
+        this.background.setDisplaySize(originalBackgroundWidth * scale, originalBackgroundHeight * scale);
+        this.physics.world.setBounds(0, 0, this.background.displayWidth, this.background.displayHeight - 25);
+    
         let textoBienvenida = this.add.text(500, 200, '¡Bienvenido al Nivel 2!', { fontSize: '40px', fill: '#ff0' });
         this.time.delayedCall(2000, () => {
             textoBienvenida.destroy();
         });
-
-
-        //Player
+    
+       
+        // Player
         this.player = new Player(this, 100, 200);
+        this.player.sprite.setScale(scale);
         this.physics.add.collider(this.player.sprite, this.platforms);
 
-
-        //Enemies
+        if (this.isMobile) {
+            this.joystick = new Joystick(this, 100, this.cameras.main.height - 100);
+            console.log("Joystick creado en el nivel", this.scene.key); 
+        }
+        // Enemies
         this.enemies1 = [];
         for (let i = 0; i < 3; i++) {
-            let x = Phaser.Math.Between(300, 5900);
-            this.enemies1.push(new Enemy(this, x, 500, 'enemie1', 1, 200, { min: x - 300, max: x + 300 }));
+            let x = Phaser.Math.Between(300, 5900) * scale;
+            this.enemies1.push(new Enemy(this, x, 500 * scale, 'enemie1', 1, 200, { min: x - 300, max: x + 300 }, scale));
         }
 
         this.enemies2 = [];
         for (let i = 0; i < 3; i++) {
-            let y = Phaser.Math.Between(100, 500);
-            let x = Phaser.Math.Between(300, 5900);
-            this.enemies2.push(new Enemy(this, x, y, 'enemie2', 1, 100, { min: y - 150, max: y + 150 }, true));
+            let y = Phaser.Math.Between(100, 500) * scale;
+            let x = Phaser.Math.Between(300, 5900) * scale;
+            this.enemies2.push(new Enemy(this, x, y, 'enemie2', 1, 100, { min: y - 150, max: y + 150 }, scale, true));
         }
 
-        // level 2
-        this.goal = new Goal(this, 6050, 600, 'Level3', 'goal2');
+        // Goal
+        this.goal = new Goal(this, 6230 * scale, 600 * scale, 'Level2', 'goal', scale);
 
         // Platforms
-        this.platforms = new Platforms(this, 'levelData2');
+        this.platforms = new Platforms(this, 'levelData1', scale);
+        this.physics.add.collider(this.player.sprite, this.platforms);
 
-        //Objects
         this.objects = [];
         for (let i = 0; i < 10; i++) {
             let x = Phaser.Math.Between(300, 5900);
             let y = Phaser.Math.Between(100, 500);
             let objectType = Phaser.Math.Between(1, 3) === 1 ? 'popsicle' : (Phaser.Math.Between(1, 3) === 2 ? 'candy' : 'bar');
-            this.objects.push(new GameObject(this, x, y, objectType));
+            let object = new GameObject(this, x, y, objectType);
+
+            // Ajustar escala de los objetos (dulces)
+            object.sprite.setScale(scale * 0.4); 
+
+            this.objects.push(object);
         }
 
-        //Score
-        this.scoreText = this.add.text(16, 16, 'Points: 0', {
-            fontSize: '32px',
+        // Score
+        this.scoreText = this.add.text(16 * scale, 16 * scale, 'Points: 0', {
+            fontSize: `${32 * scale}px`, 
             fill: '#fff'
         }).setScrollFactor(0);
 
-        //Pause
+        // Pause
         this.pause = new Pause(this);
 
-        //Cursor
+        // Cursor
         this.cursors = this.input.keyboard.createCursorKeys();
         this.spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
-        //Camera
+        // Camera
         this.camera = new Camera(this, this.player.sprite);
 
-        //Enemy colision
+        this.pauseButton = this.add.image(this.cameras.main.width - 50 * scale, 50 * scale, 'pauseButton')
+            .setScrollFactor(0)
+            .setScale(scale)
+            .setInteractive()
+            .on('pointerdown', () => {
+                this.pause.togglePause();
+            });
+
+        // Enemy collision
         this.enemies1.forEach(enemy => {
             this.physics.add.overlap(this.player.sprite, enemy.sprite, (player, enemy) => {
                 if (this.player.shieldActive) {
@@ -154,43 +185,45 @@ export default class Level2 extends Phaser.Scene {
             }, null, this);
         });
 
-        //Inventory
+        // Inventory
         this.inventory = new Inventory(this);
     }
 
-   // restartGame function
-    restartGame() {
-        const collisionText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, "!GAME OVER¡", {
-            fontSize: '40px',
-            fill: '#fff'
-        }).setOrigin(0.5);
+ // restartGame function
+ restartGame() {
+    const collisionText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, "!GAME OVER¡", {
+        fontSize: '40px',
+        fill: '#fff'
+    }).setOrigin(0.5);
 
-        collisionText.setScrollFactor(0);
+    collisionText.setScrollFactor(0);
 
-        this.time.delayedCall(1000, () => {
-            collisionText.destroy();
-            this.scene.restart();
-        });
-    }
+    this.time.delayedCall(1000, () => {
+        collisionText.destroy();
+        this.scene.restart();
+    });
+}
 
-    // colision message
-    showCollisionMessage(message) {
-        const collisionText = this.add.text(this.player.sprite.x, this.player.sprite.y - 100, message, { fontSize: '20px', fill: '#fff' });
-        this.time.delayedCall(1000, () => {
-            collisionText.destroy(); 
-        });
-    }
+// Collision message
+showCollisionMessage(message) {
+    const collisionText = this.add.text(this.player.sprite.x, this.player.sprite.y - 100, message, { fontSize: '20px', fill: '#fff' });
+    this.time.delayedCall(1000, () => {
+        collisionText.destroy();
+    });
+}
 
-    
-    update() {
-        if (!this.pause.isPaused) { 
-          
+update() {
+    if (!this.pause.isPaused) {
+        if (this.isMobile) {
+            this.player.update(this.cursors, this.spacebar, this.joystick);
+        } else {
             this.player.update(this.cursors, this.spacebar);
-
-            this.enemies1.forEach(enemy => enemy.update());
-            this.enemies2.forEach(enemy => enemy.update());
         }
+
+        this.enemies1.forEach(enemy => enemy.update());
+        this.enemies2.forEach(enemy => enemy.update());
     }
+}
 }
 
 

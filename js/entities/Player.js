@@ -10,15 +10,19 @@ export default class Player {
         this.sprite.setOffset(0, 0);
         this.sprite.setSize(80, 150);
 
-        //Shield
         this.shieldActive = false;
         this.shieldTime = 0;
-        this.shieldCooldown = 2000; 
+        this.shieldCooldown = 2000;
         this.shield = this.scene.add.image(this.sprite.x, this.sprite.y, 'shield').setOrigin(0.5).setAlpha(0);
         this.shield.setScale(0.8);
-        this.shield.setDepth(this.sprite.depth + 1); 
+        this.shield.setDepth(this.sprite.depth + 1);
 
-        //Animations
+        // Base speed and joystick-related factors
+        this.baseSpeed = 300;
+        this.joystickSpeedFactor = 0.6;
+        this.joystickJumpFactor = 0.7;
+
+        // Animations
         this.scene.anims.create({
             key: 'walk',
             frames: this.scene.anims.generateFrameNumbers('player', { start: 0, end: 4 }),
@@ -30,44 +34,65 @@ export default class Player {
         this.scene.anims.create({
             key: 'jump',
             frames: this.scene.anims.generateFrameNumbers('jump', { start: 0, end: 4 }),
-            frameRate: 6, 
-            hideOnComplete: true, 
+            frameRate: 6,
+            hideOnComplete: false,
         });
-
 
         this.sprite.anims.play('walk');
         this.isJumping = false;
-        this.isLanding = false; 
+        this.isLanding = false;
     }
 
-    update(cursors, spacebar) {
-        if (cursors.left.isDown) {
-            this.sprite.setVelocityX(-300);
+    update(cursors, spacebar, joystick = null) {
+        let velocityX = 0;
+        let isJoystickActive = joystick && (joystick.getDirection().x !== 0 || joystick.getDirection().y !== 0);
+
+        // Movement
+        if (isJoystickActive) {
+            velocityX = joystick.getDirection().x * this.baseSpeed * this.joystickSpeedFactor;
+            this.sprite.flipX = joystick.getDirection().x < 0;
+        } else if (cursors.left.isDown) {
+            velocityX = -this.baseSpeed;
             this.sprite.flipX = true;
-            if (!this.isJumping) this.sprite.anims.play('walk', true);
         } else if (cursors.right.isDown) {
-            this.sprite.setVelocityX(300);
+            velocityX = this.baseSpeed;
             this.sprite.flipX = false;
-            if (!this.isJumping) this.sprite.anims.play('walk', true);
-        } else {
-            this.sprite.setVelocityX(0);
-            if (this.sprite.body.onFloor() && !this.isJumping && !this.isLanding) {
-                this.sprite.anims.stop();
-            }
         }
 
-        // Jump
-        if (cursors.up.isDown && this.sprite.body.onFloor() && this.sprite.canJump) {
-            this.sprite.setVelocityY(-790);
+        this.sprite.setVelocityX(velocityX);
+
+        // Walking animation
+        if (velocityX !== 0 && this.sprite.body.onFloor() && !this.isJumping) {
+            this.sprite.anims.play('walk', true);
+        } else if (this.sprite.body.onFloor() && !this.isJumping && !this.isLanding) {
+            this.sprite.anims.stop();
+        }
+
+        // Jumping logic
+        if (
+            (cursors.up.isDown || (isJoystickActive && joystick.getDirection().y < -0.5)) &&
+            this.sprite.body.onFloor() &&
+            this.sprite.canJump
+        ) {
+            const jumpForce = isJoystickActive
+                ? -890 * this.joystickJumpFactor // joystick jump
+                : -790; // regular jump
+
+            this.sprite.setVelocityY(jumpForce);
             this.sprite.canJump = false;
             this.isJumping = true;
-            this.isLanding = false; 
+            this.isLanding = false;
             this.sprite.anims.play('jump');
+            this.sprite.setSize(80, 150); 
+            this.sprite.setOffset(0, 0);
 
-            // jump animation
+            // Animation complete logic
             this.sprite.once('animationcomplete', (animation) => {
                 if (animation.key === 'jump') {
                     this.isJumping = false;
+                    this.sprite.setSize(80, 150);
+                    this.sprite.setOffset(0, 0); 
+
                     this.scene.time.delayedCall(100, () => {
                         if (this.sprite.body.onFloor()) {
                             this.isLanding = false;
@@ -78,37 +103,38 @@ export default class Player {
             });
         }
 
-        // activate shield
-        if (spacebar.isDown && !this.shieldActive && this.scene.time.now > this.shieldTime + this.shieldCooldown) {
+        // Power button (shield activation)
+        if (joystick && joystick.isPowerPressed() && !this.shieldActive && this.scene.time.now > this.shieldTime + this.shieldCooldown) {
             this.activateShield();
         }
+
+        // Deactivate shield if cooldown is over
         if (this.shieldActive && this.scene.time.now > this.shieldTime + this.shieldCooldown) {
             this.deactivateShield();
         }
 
-        //  Update shield
+        // Update shield position
         if (this.shieldActive) {
             this.shield.setPosition(this.sprite.x, this.sprite.y);
         }
 
-        // Landing
+        // Landing logic
         if (this.sprite.body.onFloor()) {
             this.sprite.canJump = true;
             if (!this.isJumping && !this.isLanding) {
                 this.sprite.anims.play('walk', true);
             }
         }
-        this.sprite.visible = true;
     }
 
     activateShield() {
         this.shieldActive = true;
         this.shieldTime = this.scene.time.now;
-        this.shield.setAlpha(1); 
+        this.shield.setAlpha(1);
     }
 
     deactivateShield() {
         this.shieldActive = false;
-        this.shield.setAlpha(0); 
+        this.shield.setAlpha(0);
     }
 }

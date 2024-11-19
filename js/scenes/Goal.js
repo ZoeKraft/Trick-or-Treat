@@ -1,14 +1,16 @@
 export default class Goal {
-    constructor(scene, x, y, nextLevel = 'Level2', imageKey = 'goal') {
+    constructor(scene, x, y, nextLevel = 'Level2', imageKey = 'goal', scale = 1) {
         this.scene = scene;
         this.nextLevel = nextLevel; 
         this.sprite = scene.physics.add.image(x, y, imageKey); 
         this.sprite.setOrigin(0.5, 0.5);
         this.sprite.setImmovable(true);
         this.sprite.body.allowGravity = false;
-        this.sprite.setDisplaySize(200, 200);
+        
+        // size
+        this.sprite.setDisplaySize(200 * scale, 200 * scale); 
         this.sprite.setOffset(0, 0);
-        this.sprite.setSize(200, 240);
+        this.sprite.setSize(200 * scale, 240 * scale);
 
         // Colisión
         scene.physics.add.collider(this.sprite, scene.platforms);
@@ -20,11 +22,11 @@ export default class Goal {
             fontSize: '40px',
             fill: '#ff0'
         }).setOrigin(0.5);
+
         winText.setScrollFactor(0);
 
         this.scene.time.delayedCall(2000, () => {
             winText.destroy();
-           
             this.scene.scene.start(this.nextLevel); 
         });
     }

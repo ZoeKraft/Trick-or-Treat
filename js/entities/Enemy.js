@@ -1,15 +1,18 @@
 export default class Enemy {
-    constructor(scene, x, y, texture, direction, speed, range, isVertical = false) {
+    constructor(scene, x, y, texture, direction, speed, range, scale, isVertical = false) {
         this.scene = scene;
         this.sprite = this.scene.physics.add.sprite(x, y, texture);
         this.sprite.setCollideWorldBounds(true);
-        this.sprite.scale = 0.15;
+        this.sprite.setScale(scale * 0.15); 
         this.direction = direction; 
-        this.speed = speed;
-        this.range = range; 
+        this.speed = speed * scale; 
+        this.range = {
+            min: range.min * scale,
+            max: range.max * scale
+        }; 
         this.isVertical = isVertical;
         this.sprite.setOffset(0, 0);
-        this.sprite.setSize(410, 410); 
+        this.sprite.setSize(410 * scale, 410 * scale); 
         this.updateVelocity();
     }
 

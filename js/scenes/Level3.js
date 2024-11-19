@@ -8,6 +8,7 @@ import GameObject from "../entities/Object.js";
 
 import Pause from "../utils/Pause.js";
 import Inventory from "../utils/Inventory.js";
+import Joystick from "../utils/Joystick.js";
 
 export default class Level3 extends Phaser.Scene {
     constructor() {
@@ -28,6 +29,8 @@ export default class Level3 extends Phaser.Scene {
         this.cursors = null;
         this.spacebar = null;
         this.inventory = null;
+        this.joystick = null;
+        this.isMobile = false;
     }
 
     preload() {
@@ -65,12 +68,24 @@ export default class Level3 extends Phaser.Scene {
     }
 
     create() {
+        // Detect if the device is mobile
+        this.isMobile = this.sys.game.device.input.touch || window.innerWidth < 768;
+
+
+        // Dimensiones originales
+        const originalBackgroundWidth = 6300;
+        const originalBackgroundHeight = 720;
+
+        // Obtener las dimensiones de la ventana
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+
+        const scale = Math.max(windowWidth / originalBackgroundWidth, windowHeight / originalBackgroundHeight);
 
         //Background
         this.background = this.add.image(0, 0, 'background3').setOrigin(0, 0);
-        this.background.setDisplaySize(6200, window.innerHeight);
-        this.physics.world.setBounds(0, 0, this.background.displayWidth, this.background.displayHeight - 30);
-
+        this.background.setDisplaySize(originalBackgroundWidth * scale, originalBackgroundHeight * scale);
+        this.physics.world.setBounds(0, 0, this.background.displayWidth, this.background.displayHeight - 25);
 
         let textoBienvenida = this.add.text(500, 200, '¡Bienvenido al Nivel 3!', { fontSize: '40px', fill: '#ff0' });
         this.time.delayedCall(2000, () => {
@@ -80,25 +95,31 @@ export default class Level3 extends Phaser.Scene {
 
         //Player
         this.player = new Player(this, 100, 200);
+        this.player.sprite.setScale(scale);
         this.physics.add.collider(this.player.sprite, this.platforms);
 
+        //joystick
+        if (this.isMobile) {
+            this.joystick = new Joystick(this, 100, this.cameras.main.height - 100);
+        }
 
         //Enemies
         this.enemies1 = [];
         for (let i = 0; i < 3; i++) {
-            let x = Phaser.Math.Between(300, 5900);
-            this.enemies1.push(new Enemy(this, x, 500, 'enemie1', 1, 200, { min: x - 300, max: x + 300 }));
+            let x = Phaser.Math.Between(300, 5900) * scale;
+            this.enemies1.push(new Enemy(this, x, 500 * scale, 'enemie1', 1, 200, { min: x - 300, max: x + 300 }, scale));
         }
 
         this.enemies2 = [];
         for (let i = 0; i < 3; i++) {
-            let y = Phaser.Math.Between(100, 500);
-            let x = Phaser.Math.Between(300, 5900);
-            this.enemies2.push(new Enemy(this, x, y, 'enemie2', 1, 100, { min: y - 150, max: y + 150 }, true));
+            let y = Phaser.Math.Between(100, 500) * scale;
+            let x = Phaser.Math.Between(300, 5900) * scale;
+            this.enemies2.push(new Enemy(this, x, y, 'enemie2', 1, 100, { min: y - 150, max: y + 150 }, scale, true));
         }
 
         // level 3
-        this.goal = new Goal(this, 6050, 600, 'Level1', 'goal3');
+      
+        this.goal = new Goal(this, 6230 * scale, 600 * scale, 'Level1', 'goal3', scale);
 
         // Platforms
         this.platforms = new Platforms(this, 'levelData3');
@@ -109,12 +130,16 @@ export default class Level3 extends Phaser.Scene {
             let x = Phaser.Math.Between(300, 5900);
             let y = Phaser.Math.Between(100, 500);
             let objectType = Phaser.Math.Between(1, 3) === 1 ? 'popsicle' : (Phaser.Math.Between(1, 3) === 2 ? 'candy' : 'bar');
-            this.objects.push(new GameObject(this, x, y, objectType));
+            let object = new GameObject(this, x, y, objectType);
+            object.sprite.setScale(scale * 0.3); 
+
+            this.objects.push(object);
         }
 
         //Score
-        this.scoreText = this.add.text(16, 16, 'Points: 0', {
-            fontSize: '32px',
+       
+        this.scoreText = this.add.text(16 * scale, 16 * scale, 'Points: 0', {
+            fontSize: `${32 * scale}px`, 
             fill: '#fff'
         }).setScrollFactor(0);
 
@@ -159,7 +184,7 @@ export default class Level3 extends Phaser.Scene {
         this.inventory = new Inventory(this);
     }
 
-   // restartGame function
+    // restartGame function
     restartGame() {
         const collisionText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, "!GAME OVER¡", {
             fontSize: '40px',
@@ -178,16 +203,19 @@ export default class Level3 extends Phaser.Scene {
     showCollisionMessage(message) {
         const collisionText = this.add.text(this.player.sprite.x, this.player.sprite.y - 100, message, { fontSize: '20px', fill: '#fff' });
         this.time.delayedCall(1000, () => {
-            collisionText.destroy(); 
+            collisionText.destroy();
         });
     }
 
-    
-    update() {
-        if (!this.pause.isPaused) { 
-          
-            this.player.update(this.cursors, this.spacebar);
 
+    update() {
+        if (!this.pause.isPaused) {
+            if (this.isMobile) {
+                this.player.update(this.cursors, this.spacebar, this.joystick);
+            } else {
+                this.player.update(this.cursors, this.spacebar);
+            }
+    
             this.enemies1.forEach(enemy => enemy.update());
             this.enemies2.forEach(enemy => enemy.update());
         }
