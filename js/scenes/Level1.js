@@ -9,6 +9,7 @@ import GameObject from "../entities/Object.js";
 import Pause from "../utils/Pause.js";
 import Inventory from "../utils/Inventory.js";
 import Joystick from "../utils/Joystick.js";
+import Music from "../utils/Music.js";
 
 export default class Level1 extends Phaser.Scene {
     constructor() {
@@ -30,7 +31,8 @@ export default class Level1 extends Phaser.Scene {
         this.spacebar = null;
         this.inventory = null;
         this.joystick = null;
-        this.isMobile = false; 
+        this.isMobile = false;
+        this.musicController = null;
     }
 
     preload() {
@@ -47,6 +49,9 @@ export default class Level1 extends Phaser.Scene {
         this.load.image('goal', './img/goal.png');
         this.load.image('inventory', './img/inventory.png');
         this.load.image('shield', './img/shield1.png');
+
+        // music
+        this.load.audio('levelMusic', './audio/forest.mp3');
 
         // Animations
         this.load.spritesheet('player', './img/player.png', {
@@ -86,6 +91,10 @@ export default class Level1 extends Phaser.Scene {
         this.background.setDisplaySize(originalBackgroundWidth * scale, originalBackgroundHeight * scale);
         this.physics.world.setBounds(0, 0, this.background.displayWidth, this.background.displayHeight - 25);
 
+        //music
+        this.musicController = new Music(this, 'levelMusic', 0.5);
+        this.musicController.play();
+
         // Player
         this.player = new Player(this, 100, 200);
         this.player.sprite.setScale(scale);
@@ -98,13 +107,13 @@ export default class Level1 extends Phaser.Scene {
 
         // Enemies
         this.enemies1 = [];
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 2; i++) {
             let x = Phaser.Math.Between(300, 5900) * scale;
             this.enemies1.push(new Enemy(this, x, 500 * scale, 'enemie1', 1, 200, { min: x - 300, max: x + 300 }, scale));
         }
 
         this.enemies2 = [];
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 2; i++) {
             let y = Phaser.Math.Between(100, 500) * scale;
             let x = Phaser.Math.Between(300, 5900) * scale;
             this.enemies2.push(new Enemy(this, x, y, 'enemie2', 1, 100, { min: y - 150, max: y + 150 }, scale, true));
@@ -114,7 +123,7 @@ export default class Level1 extends Phaser.Scene {
         this.goal = new Goal(this, 6230 * scale, 600 * scale, 'Level2', 'goal', scale);
 
         // Platforms
-        this.platforms = new Platforms(this, 'levelData1', scale); 
+        this.platforms = new Platforms(this, 'levelData1', scale);
         this.physics.add.collider(this.player.sprite, this.platforms);
 
         this.objects = [];
@@ -124,15 +133,15 @@ export default class Level1 extends Phaser.Scene {
             let objectType = Phaser.Math.Between(1, 3) === 1 ? 'popsicle' : (Phaser.Math.Between(1, 3) === 2 ? 'candy' : 'bar');
             let object = new GameObject(this, x, y, objectType);
 
-          
-            object.sprite.setScale(scale * 0.4); 
+
+            object.sprite.setScale(scale * 0.4);
 
             this.objects.push(object);
         }
 
         // Score
         this.scoreText = this.add.text(16 * scale, 16 * scale, 'Points: 0', {
-            fontSize: `${32 * scale}px`, 
+            fontSize: `${32 * scale}px`,
             fill: '#fff'
         }).setScrollFactor(0);
 
@@ -187,13 +196,19 @@ export default class Level1 extends Phaser.Scene {
 
     // restartGame function
     restartGame() {
+       
         const collisionText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, "!GAME OVER¡", {
             fontSize: '40px',
             fill: '#fff'
         }).setOrigin(0.5);
-
+    
         collisionText.setScrollFactor(0);
-
+    
+        
+        if (this.musicController) {
+            this.musicController.stop();
+        }
+    
         this.time.delayedCall(1000, () => {
             collisionText.destroy();
             this.scene.restart();
@@ -208,6 +223,17 @@ export default class Level1 extends Phaser.Scene {
         });
     }
 
+    endLevel() {
+       
+        if (this.musicController) {
+            this.musicController.stop();
+        }
+    
+      
+        this.scene.start('Level2'); 
+    }
+    
+
     update() {
         if (!this.pause.isPaused) {
             if (this.isMobile) {
@@ -215,7 +241,7 @@ export default class Level1 extends Phaser.Scene {
             } else {
                 this.player.update(this.cursors, this.spacebar);
             }
-    
+
             this.enemies1.forEach(enemy => enemy.update());
             this.enemies2.forEach(enemy => enemy.update());
         }

@@ -9,6 +9,7 @@ import GameObject from "../entities/Object.js";
 import Pause from "../utils/Pause.js";
 import Inventory from "../utils/Inventory.js";
 import Joystick from "../utils/Joystick.js";
+import Music from "../utils/Music.js";
 
 export default class Level3 extends Phaser.Scene {
     constructor() {
@@ -31,6 +32,7 @@ export default class Level3 extends Phaser.Scene {
         this.inventory = null;
         this.joystick = null;
         this.isMobile = false;
+        this.musicController = null;
     }
 
     preload() {
@@ -47,6 +49,9 @@ export default class Level3 extends Phaser.Scene {
         this.load.image('inventory', './img/inventory.png');
         this.load.image('shield', './img/shield1.png');
 
+        
+        // music
+        this.load.audio('levelMusic', './audio/forest.mp3');
 
         //animations
         this.load.spritesheet('player', './img/player.png', {
@@ -91,6 +96,10 @@ export default class Level3 extends Phaser.Scene {
         this.time.delayedCall(2000, () => {
             textoBienvenida.destroy();
         });
+ 
+      //music
+      this.musicController = new Music(this, 'levelMusic', 0.5);
+      this.musicController.play();
 
 
         //Player
@@ -184,21 +193,26 @@ export default class Level3 extends Phaser.Scene {
         this.inventory = new Inventory(this);
     }
 
-    // restartGame function
-    restartGame() {
+     // restartGame function
+     restartGame() {
+       
         const collisionText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, "!GAME OVER¡", {
             fontSize: '40px',
             fill: '#fff'
         }).setOrigin(0.5);
-
+    
         collisionText.setScrollFactor(0);
-
+    
+        
+        if (this.musicController) {
+            this.musicController.stop();
+        }
+    
         this.time.delayedCall(1000, () => {
             collisionText.destroy();
             this.scene.restart();
         });
     }
-
     // colision message
     showCollisionMessage(message) {
         const collisionText = this.add.text(this.player.sprite.x, this.player.sprite.y - 100, message, { fontSize: '20px', fill: '#fff' });
@@ -207,6 +221,16 @@ export default class Level3 extends Phaser.Scene {
         });
     }
 
+
+    endLevel() {
+       
+        if (this.musicController) {
+            this.musicController.stop();
+        }
+    
+      
+        this.scene.start('Level1'); 
+    }
 
     update() {
         if (!this.pause.isPaused) {
@@ -220,4 +244,5 @@ export default class Level3 extends Phaser.Scene {
             this.enemies2.forEach(enemy => enemy.update());
         }
     }
+
 }

@@ -29,12 +29,12 @@ export default class Platforms {
 
             //platform scale
             if (screenHeight <= 1024) {
-                platform.setScale(0.6, 0.6);  // big platform
+                platform.setScale(0.8, 0.8);  // big platform
             }
             if (screenHeight <= 800) {
                 platform.setScale(0.5, 0.5);  // little platform
             } if (screenHeight <= 600) {
-                platform.setScale(0.2, 0.25);
+                platform.setScale(0.25, 0.25);
             }
             
             platform.setSize(platform.displayWidth, platform.displayHeight);

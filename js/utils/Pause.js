@@ -41,16 +41,15 @@ export default class Pause {
 
     togglePause() {
         this.isPaused = !this.isPaused;
-
         if (this.isPaused) {
             this.scene.physics.world.pause();
-            this.playButton.setVisible(true);
-            this.pauseButton.setVisible(false);
+            this.playButton.setVisible(true); 
+            this.pauseButton.setVisible(false); 
             this.showPausePanel();
         } else {
             this.scene.physics.world.resume();
-            this.playButton.setVisible(false);
-            this.pauseButton.setVisible(true);
+            this.playButton.setVisible(false); 
+            this.pauseButton.setVisible(true); 
             if (this.panel) {
                 this.panel.destroy();
                 this.panel = null;

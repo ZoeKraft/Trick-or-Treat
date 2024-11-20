@@ -8,7 +8,7 @@ export default class Player {
         this.sprite.canJump = true;
         this.sprite.setDepth(1);
         this.sprite.setOffset(0, 0);
-        this.sprite.setSize(80, 150);
+        this.sprite.setSize(80, 130);
 
         this.shieldActive = false;
         this.shieldTime = 0;
@@ -17,7 +17,7 @@ export default class Player {
         this.shield.setScale(0.8);
         this.shield.setDepth(this.sprite.depth + 1);
 
-        // Base speed and joystick-related factors
+        // move
         this.baseSpeed = 300;
         this.joystickSpeedFactor = 0.6;
         this.joystickJumpFactor = 0.7;
@@ -46,8 +46,8 @@ export default class Player {
     update(cursors, spacebar, joystick = null) {
         let velocityX = 0;
         let isJoystickActive = joystick && (joystick.getDirection().x !== 0 || joystick.getDirection().y !== 0);
-
-        // Movement
+    
+        // mpve
         if (isJoystickActive) {
             velocityX = joystick.getDirection().x * this.baseSpeed * this.joystickSpeedFactor;
             this.sprite.flipX = joystick.getDirection().x < 0;
@@ -58,41 +58,38 @@ export default class Player {
             velocityX = this.baseSpeed;
             this.sprite.flipX = false;
         }
-
+    
         this.sprite.setVelocityX(velocityX);
-
-        // Walking animation
+    
+        // walk animation
         if (velocityX !== 0 && this.sprite.body.onFloor() && !this.isJumping) {
             this.sprite.anims.play('walk', true);
         } else if (this.sprite.body.onFloor() && !this.isJumping && !this.isLanding) {
             this.sprite.anims.stop();
         }
-
-        // Jumping logic
+    
+        // jump
         if (
             (cursors.up.isDown || (isJoystickActive && joystick.getDirection().y < -0.5)) &&
             this.sprite.body.onFloor() &&
             this.sprite.canJump
         ) {
             const jumpForce = isJoystickActive
-                ? -890 * this.joystickJumpFactor // joystick jump
-                : -790; // regular jump
+            ? -890 * this.joystickJumpFactor // joystick jump
+            : -1000; // regular jump
 
             this.sprite.setVelocityY(jumpForce);
             this.sprite.canJump = false;
             this.isJumping = true;
             this.isLanding = false;
             this.sprite.anims.play('jump');
-            this.sprite.setSize(80, 150); 
-            this.sprite.setOffset(0, 0);
-
-            // Animation complete logic
+            this.sprite.setSize(80, 130);
             this.sprite.once('animationcomplete', (animation) => {
                 if (animation.key === 'jump') {
                     this.isJumping = false;
-                    this.sprite.setSize(80, 150);
-                    this.sprite.setOffset(0, 0); 
-
+                    this.sprite.setSize(80, 130);
+                  
+    
                     this.scene.time.delayedCall(100, () => {
                         if (this.sprite.body.onFloor()) {
                             this.isLanding = false;
@@ -103,22 +100,20 @@ export default class Player {
             });
         }
 
-        // Power button (shield activation)
-        if (joystick && joystick.isPowerPressed() && !this.shieldActive && this.scene.time.now > this.shieldTime + this.shieldCooldown) {
+        // power
+        if ((joystick && joystick.isPowerPressed()) || (spacebar && spacebar.isDown)) {
             this.activateShield();
         }
 
-        // Deactivate shield if cooldown is over
+        // power deactivation
         if (this.shieldActive && this.scene.time.now > this.shieldTime + this.shieldCooldown) {
             this.deactivateShield();
         }
-
-        // Update shield position
+    
         if (this.shieldActive) {
             this.shield.setPosition(this.sprite.x, this.sprite.y);
         }
-
-        // Landing logic
+    
         if (this.sprite.body.onFloor()) {
             this.sprite.canJump = true;
             if (!this.isJumping && !this.isLanding) {
@@ -128,9 +123,11 @@ export default class Player {
     }
 
     activateShield() {
-        this.shieldActive = true;
-        this.shieldTime = this.scene.time.now;
-        this.shield.setAlpha(1);
+        if (!this.shieldActive && this.scene.time.now > this.shieldTime + this.shieldCooldown) {
+            this.shieldActive = true;
+            this.shieldTime = this.scene.time.now;
+            this.shield.setAlpha(1);
+        }
     }
 
     deactivateShield() {
