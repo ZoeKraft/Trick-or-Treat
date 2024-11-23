@@ -13,26 +13,29 @@ export default class Pause {
     }
 
     createButtons() {
-        const buttonSize = 50 * this.scaleFactor;  
-
-        // play button
+        const buttonSize = 50 * this.scaleFactor;
+    
         this.playButton = this.scene.add.sprite(0, 0, 'playButton')
             .setInteractive()
             .setOrigin(0, 0)
             .setDisplaySize(buttonSize, buttonSize)
-            .on('pointerdown', () => this.togglePause());
-
-        // pause button
+            .on('pointerdown', () => this.togglePause())
+            .setVisible(false) 
+    
+       
         this.pauseButton = this.scene.add.sprite(0, 0, 'pauseButton')
             .setInteractive()
             .setOrigin(0, 0)
             .setDisplaySize(buttonSize, buttonSize)
             .on('pointerdown', () => this.togglePause())
-            .setVisible(false); 
-
+            .setVisible(true) 
+            .setActive(true); 
+    
         this.buttonContainer.add(this.playButton);
         this.buttonContainer.add(this.pauseButton);
     }
+    
+    
 
     updateButtonsPosition() {
         this.buttonContainer.x = this.scene.cameras.main.width - 66 * this.scaleFactor;
@@ -40,22 +43,29 @@ export default class Pause {
     }
 
     togglePause() {
-        this.isPaused = !this.isPaused;
+        this.isPaused = !this.isPaused; 
+    
         if (this.isPaused) {
-            this.scene.physics.world.pause();
-            this.playButton.setVisible(true); 
-            this.pauseButton.setVisible(false); 
-            this.showPausePanel();
+            
+            this.scene.physics.world.pause(); 
+            this.playButton.setVisible(true).setActive(true); 
+            this.pauseButton.setVisible(false).setActive(false); 
+            this.showPausePanel(); 
         } else {
-            this.scene.physics.world.resume();
-            this.playButton.setVisible(false); 
-            this.pauseButton.setVisible(true); 
+           
+            this.scene.physics.world.resume(); 
+            this.playButton.setVisible(false).setActive(false); 
+            this.pauseButton.setVisible(true).setActive(true); 
             if (this.panel) {
-                this.panel.destroy();
+                this.panel.destroy(); 
                 this.panel = null;
             }
         }
+
     }
+    
+    
+    
 
     showPausePanel() {
         this.panel = this.scene.add.container(this.scene.cameras.main.centerX + 400 * this.scaleFactor, this.scene.cameras.main.centerY);

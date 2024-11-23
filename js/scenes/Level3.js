@@ -49,7 +49,7 @@ export default class Level3 extends Phaser.Scene {
         this.load.image('inventory', './img/inventory.png');
         this.load.image('shield', './img/shield1.png');
 
-        
+
         // music
         this.load.audio('levelMusic', './audio/forest.mp3');
 
@@ -73,6 +73,8 @@ export default class Level3 extends Phaser.Scene {
     }
 
     create() {
+        const levelData = this.cache.json.get('levelData3');
+
         // Detect if the device is mobile
         this.isMobile = this.sys.game.device.input.touch || window.innerWidth < 768;
 
@@ -96,14 +98,14 @@ export default class Level3 extends Phaser.Scene {
         this.time.delayedCall(2000, () => {
             textoBienvenida.destroy();
         });
- 
-      //music
-      this.musicController = new Music(this, 'levelMusic', 0.5);
-      this.musicController.play();
 
+        //music
+        this.musicController = new Music(this, 'levelMusic', 0.5);
+        this.musicController.play();
 
-        //Player
-        this.player = new Player(this, 100, 200);
+        // Player
+        const playerData = levelData.player;
+        this.player = new Player(this, playerData.x, playerData.y);
         this.player.sprite.setScale(scale);
         this.physics.add.collider(this.player.sprite, this.platforms);
 
@@ -126,9 +128,12 @@ export default class Level3 extends Phaser.Scene {
             this.enemies2.push(new Enemy(this, x, y, 'enemie2', 1, 100, { min: y - 150, max: y + 150 }, scale, true));
         }
 
-        // level 3
-      
-        this.goal = new Goal(this, 6230 * scale, 600 * scale, 'Level1', 'goal3', scale);
+        //goal
+        const goalData = levelData.goal;
+        const goalX = goalData.x;
+        const goalY = goalData.y;
+        this.goal = new Goal(this, goalX * scale, goalY * scale, 'Level1', 'goal3', scale);
+
 
         // Platforms
         this.platforms = new Platforms(this, 'levelData3');
@@ -140,15 +145,15 @@ export default class Level3 extends Phaser.Scene {
             let y = Phaser.Math.Between(100, 500);
             let objectType = Phaser.Math.Between(1, 3) === 1 ? 'popsicle' : (Phaser.Math.Between(1, 3) === 2 ? 'candy' : 'bar');
             let object = new GameObject(this, x, y, objectType);
-            object.sprite.setScale(scale * 0.3); 
+            object.sprite.setScale(scale * 0.3);
 
             this.objects.push(object);
         }
 
         //Score
-       
+
         this.scoreText = this.add.text(16 * scale, 16 * scale, 'Points: 0', {
-            fontSize: `${32 * scale}px`, 
+            fontSize: `${32 * scale}px`,
             fill: '#fff'
         }).setScrollFactor(0);
 
@@ -191,23 +196,29 @@ export default class Level3 extends Phaser.Scene {
 
         //Inventory
         this.inventory = new Inventory(this);
+
+        this.events.on('shutdown', () => {
+            if (this.musicController) {
+                this.musicController.stop();
+            }
+        });
     }
 
-     // restartGame function
-     restartGame() {
-       
+    // restartGame function
+    restartGame() {
+
         const collisionText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, "!GAME OVER¡", {
             fontSize: '40px',
             fill: '#fff'
         }).setOrigin(0.5);
-    
+
         collisionText.setScrollFactor(0);
-    
-        
+
+
         if (this.musicController) {
             this.musicController.stop();
         }
-    
+
         this.time.delayedCall(1000, () => {
             collisionText.destroy();
             this.scene.restart();
@@ -223,13 +234,13 @@ export default class Level3 extends Phaser.Scene {
 
 
     endLevel() {
-       
+
         if (this.musicController) {
             this.musicController.stop();
         }
-    
-      
-        this.scene.start('Level1'); 
+
+
+        this.scene.start('Level1');
     }
 
     update() {
@@ -239,7 +250,7 @@ export default class Level3 extends Phaser.Scene {
             } else {
                 this.player.update(this.cursors, this.spacebar);
             }
-    
+
             this.enemies1.forEach(enemy => enemy.update());
             this.enemies2.forEach(enemy => enemy.update());
         }
